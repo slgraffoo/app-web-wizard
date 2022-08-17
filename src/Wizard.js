@@ -25,12 +25,26 @@ class WizardMain extends Component {
         this.state.config.title =
             engine.getConfig(this.state.config.configId).title;
     }
-    updateStage() {
-        this.setState({
-            stage: engine.getNextStage(this.state.config.configId, this.state.stage.id, this.state.selectedAnswer)
-        })
+    handleAnswerClick(e) {
+        console.log('answer event is:', e.currentTarget.value);
+        this.setState({selectedAnswer: e.currentTarget.value});
     }
-
+    handleNextClick(e) {
+        console.log('this is:', this);
+        console.log('next event is:', e.currentTarget.id);
+        this.updateStage();
+    }
+    updateStage() {
+        const next = engine.getNextStage(this.state.config.configId, this.state.stage.id, this.state.selectedAnswer);
+        if (next !== null) {
+            this.setState({
+                stage: next
+            });
+        }
+    }
+    // TODO ERROR BOUNDARIES
+    // TODO WHEN STAGE IS THE END
+    // TODO RESET RADIO CHECKED WHEN RENDERED
     render() {
         return (
             <main className="WizApp-main">
@@ -38,21 +52,21 @@ class WizardMain extends Component {
                 <p>
                     Stage: {this.state.stage.id}<br />
                 </p>
-                <form>
                     <p>{this.state.stage.question}</p>
                     <div>
                         <input type="radio" id="contactChoice1"
-                               name="answer" value={this.state.stage.answers[0].value} />
+                               name="answer" value={this.state.stage.answers[0].value}
+                               onChange={(e) => this.handleAnswerClick(e)}/>
                         <label htmlFor="contactChoice1">{this.state.stage.answers[0].choice}</label>
                         <br />
                         <input type="radio" id="contactChoice2"
-                               name="answer" value={this.state.stage.answers[1].value} />
+                               name="answer" value={this.state.stage.answers[1].value}
+                                onChange={(e) => this.handleAnswerClick(e)}/>
                         <label htmlFor="contactChoice2">{this.state.stage.answers[1].choice}</label>
                     </div>
                     <div>
-                        <button type="submit">Submit</button>
+                        <button id="nextStage" onClick={(e) => this.handleNextClick(e)}>Next</button>
                     </div>
-                </form>
                 <p>
                     <a className="WizApp-link"
                        href="https://en.wikipedia.org/wiki/Wizard_(software)"

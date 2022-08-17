@@ -91,8 +91,9 @@ function getNextStage(configId, currentStageId, selectedAnswer) {
         return null;
     }
     const currentStage = config.stages[stageIdx];
-    console.log(currentStage);
+    console.log("currentStage: " + JSON.stringify(currentStage));
     if (_.isEmpty(currentStage)) {
+        console.log("returning null (stage not found)");
         return null;
     }
     if (_.isNull(selectedAnswer)) {
@@ -101,7 +102,9 @@ function getNextStage(configId, currentStageId, selectedAnswer) {
     }
     let nextStage = {};
     for (const answer of currentStage.answers) {
-        if (answer.choice === selectedAnswer) {
+        console.log(answer.choice);
+        console.log(selectedAnswer);
+        if (answer.value === selectedAnswer) {
             if (answer.next < 0) {
                 // the end
                 nextStage = { id: "END"}
@@ -110,6 +113,7 @@ function getNextStage(configId, currentStageId, selectedAnswer) {
             }
         }
     }
+    console.log(nextStage);
     return nextStage;
 }
 
